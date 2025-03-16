@@ -6,7 +6,7 @@ import (
 	"scraper-url/internal/config"
 	"scraper-url/internal/crawler/spider"
 	"scraper-url/internal/lib/logger/slogpretty"
-	"scraper-url/internal/tcp"
+	"scraper-url/internal/netsrv"
 )
 
 const (
@@ -27,7 +27,7 @@ func main() {
 	crawler := spider.New()
 
 	//run tcp server
-	server := tcp.New(log, cfg.Address, crawler)
+	server := netsrv.New(log, cfg.Address, crawler)
 
 	crawler.Scan(cfg.Url, cfg.Depth)
 
