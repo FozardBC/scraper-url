@@ -14,12 +14,15 @@ import (
 
 // Service - служба поискового робота.
 type Service struct {
-	*index.Index
+	Index *index.Index
 }
 
 // New - констрктор службы поискового робота.
 func New() *Service {
-	s := Service{}
+	s := Service{
+		Index: index.New(),
+	}
+
 	return &s
 }
 
@@ -44,7 +47,25 @@ func (s *Service) Scan(url string, depth int) (data []crawler.Document, err erro
 
 	s.Index.Docs = append(s.Index.Docs, data...)
 
+	s.indexDocuments()
+
 	return data, nil
+}
+
+func (s *Service) indexDocuments() {
+
+	splitFunc := func(r rune) bool {
+		return r == '/' || r == '?' || r == '&' || r == '#' || r == ' ' || r == '.' || r == ':' || r == '{' || r == '}'
+	}
+
+	for _, doc := range s.Index.Docs {
+		words := strings.FieldsFunc(doc.URL, splitFunc)
+
+		for _, w := range words {
+
+			s.Index.AddWord(w, doc.ID)
+		}
+	}
 }
 
 // parse рекурсивно обходит ссылки на странице, переданной в url.

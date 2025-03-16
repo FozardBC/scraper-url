@@ -13,6 +13,8 @@ type Config struct {
 	//StoragePath string `yaml:"storage_path" env-required:"false"`
 	//HTTPServer  HTTPServer `yaml:"http_server" env-required:"true"`
 	Address string `yaml:"addres" env-default:"localhost:8080" env-required:"true"`
+	Url     string `yaml:"url" env-required:"true"`
+	Depth   int    `yaml:"depth" env-default:"1"`
 }
 
 // type HTTPServer struct {

@@ -23,9 +23,15 @@ func main() {
 	// run logger
 	log := setupLogger(cfg.Env)
 
+	//run crawler
 	crawler := spider.New()
 
-	tcp.ListenAndServe(log, cfg.Address)
+	//run tcp server
+	server := tcp.New(log, cfg.Address, crawler)
+
+	crawler.Scan(cfg.Url, cfg.Depth)
+
+	server.ListenAndServe()
 
 }
 

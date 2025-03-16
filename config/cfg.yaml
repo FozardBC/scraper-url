@@ -1,2 +1,4 @@
 env: "local"
 addres: "localhost:8080"
+url: "https://yandex.ru"
+depth: 5
