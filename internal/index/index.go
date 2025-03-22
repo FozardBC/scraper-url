@@ -1,6 +1,7 @@
 package index
 
 import (
+	"fmt"
 	"scraper-url/internal/crawler"
 	"strings"
 )
@@ -21,7 +22,13 @@ func (i *Index) AddWord(word string, docId int) {
 	i.Words[word] = append(i.Words[word], docId)
 }
 
-func (i *Index) GetUrls(word string) []string {
+func (i *Index) GetIndex() *Index {
+	return i
+}
+
+func (i *Index) GetUrls(word string) ([]string, error) {
+	const op = "internal/index/GetUrls"
+
 	word = strings.ToLower(word)
 	word = strings.TrimSpace(word)
 	word = strings.Trim(word, ".,!?-\n\r\t")
@@ -30,7 +37,7 @@ func (i *Index) GetUrls(word string) []string {
 
 	baseIds, ok := i.Words[word]
 	if ok == false {
-		return urls
+		return urls, nil
 	}
 
 	for _, id := range baseIds {
@@ -41,5 +48,10 @@ func (i *Index) GetUrls(word string) []string {
 		}
 
 	}
-	return urls
+
+	if len(baseIds) == 0 {
+		return nil, fmt.Errorf("%s:%s", op, "url ids not found")
+	}
+
+	return urls, nil
 }

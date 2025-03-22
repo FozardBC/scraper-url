@@ -6,8 +6,11 @@ import (
 	"scraper-url/internal/config"
 	"scraper-url/internal/crawler/spider"
 	"scraper-url/internal/lib/logger/slogpretty"
+	indexHandler "scraper-url/internal/netsrv/http-server/handlers/index"
 	"scraper-url/internal/netsrv/tcp"
 	"scraper-url/internal/storage/files"
+
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -50,6 +53,12 @@ func main() {
 	server := tcp.New(log, cfg.Address, crawler)
 
 	server.ListenAndServe()
+
+	// start http
+
+	router := mux.NewRouter()
+
+	router.HandleFunc("/index", indexHandler.New(log, crawler.Index)).Methods("GET")
 
 }
 

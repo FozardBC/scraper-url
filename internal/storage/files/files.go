@@ -68,7 +68,7 @@ func (s *Storage) Save(docs []crawler.Document) error {
 		return fmt.Errorf("%s:%w", op, err)
 	}
 
-	_, err = s.Write([]byte(b))
+	_, err = s.write([]byte(b))
 	if err != nil {
 		return fmt.Errorf("%s:%w", op, err)
 	}
@@ -76,7 +76,7 @@ func (s *Storage) Save(docs []crawler.Document) error {
 	return nil
 }
 
-func (s *Storage) Write(data []byte) (n int, err error) {
+func (s *Storage) write(data []byte) (n int, err error) {
 
 	const op = "storage.files.Write"
 
@@ -103,4 +103,15 @@ func (s *Storage) Read(data []byte) (n int, err error) {
 		return 0, fmt.Errorf("%s:%w", op, err)
 	}
 	return
+}
+
+func (s *Storage) GetIndex() ([]byte, error) {
+	const op = "storage.files.GetIndex"
+
+	var b []byte
+
+	_, err := s.Read(b)
+	if err != nil {
+		return nil, fmt.Errorf("%s:%s", op, "can't ")
+	}
 }
